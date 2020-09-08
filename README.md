@@ -1,1 +1,1 @@
-Basic React Project for learning
+Basic React Projects for learning
