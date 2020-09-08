@@ -1,1 +1,1 @@
-New Project - React-Tutorial-Projects
+Basic React Project for learning
