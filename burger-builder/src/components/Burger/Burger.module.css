@@ -3,7 +3,6 @@
     margin: auto;
     height: 250px;
     overflow: scroll;
-    overflow: hidden;
     text-align: center;
     font-weight: bold;
     font-size: 1.2rem;
@@ -28,4 +27,8 @@
         width: 700px;
         height: 600px;
     }
+}
+
+.Burger::-webkit-scrollbar {
+  display: none;
 }
