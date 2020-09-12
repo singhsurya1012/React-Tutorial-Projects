@@ -10,6 +10,7 @@ const withErrorHandler = (WrapperComponent, axios) => {
         }
 
         componentWillMount() {
+            console.log('[BurgerBuilder] componentWillMount')
             this.requestInterceptor = axios.interceptors.request.use(req => {
                 this.setState({ error: null })
                 return req;
@@ -22,7 +23,7 @@ const withErrorHandler = (WrapperComponent, axios) => {
 
         componentWillUnmount() {
             axios.interceptors.request.eject(this.requestInterceptor);
-            axios.interceptors.reponse.eject(this.responseInterceptor)
+            axios.interceptors.response.eject(this.responseInterceptor)
 
         }
 
