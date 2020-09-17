@@ -10,7 +10,7 @@ const withErrorHandler = (WrapperComponent, axios) => {
         }
 
         componentWillMount() {
-            console.log('[BurgerBuilder] componentWillMount')
+            console.log('[withErrorHandler] componentWillMount')
             this.requestInterceptor = axios.interceptors.request.use(req => {
                 this.setState({ error: null })
                 return req;
