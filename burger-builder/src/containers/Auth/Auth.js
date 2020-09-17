@@ -6,6 +6,7 @@ import * as actions from '../../store/actions/index'
 import { connect } from 'react-redux'
 import Spinner from '../../components/UI/Spinner/Spinner'
 import { Redirect } from 'react-router-dom'
+import { updateObject, checkValidity } from '../../shared/utility'
 
 export class Auth extends Component {
 
@@ -47,56 +48,28 @@ export class Auth extends Component {
 
 
     componentDidMount() {
-        if(!this.props.buildingBurger && this.props.authRedirectPath !=='/') {
+        if (!this.props.buildingBurger && this.props.authRedirectPath !== '/') {
             this.props.onSetAuthRedirectPath();
         }
     }
 
-    checkValidity(value, rules) {
-        let isValid = true;
-        if (!rules) {
-            return true;
-        }
+    
 
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
+    inputChangedHandler = (event, controlName) => {
 
-        if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid
-        }
+        const updatedControls = updateObject(this.state.controls, {
 
-        if (rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid
-        }
+            [controlName]: updateObject(this.state.controls[controlName], {
 
-        if (rules.isEmail) {
-            const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-            isValid = pattern.test(value) && isValid
-        }
+                value: event.target.value,
+                valid: checkValidity(event.target.value, this.state.controls[controlName].validation),
+                touched: true
+            })
 
-        if (rules.isNumeric) {
-            const pattern = /^\d+$/;
-            isValid = pattern.test(value) && isValid
-        }
-
-        return isValid;
-    }
-
-    inputChangedHandler = (event, inputIdentifier) => {
-        const updatedContolsForm = {
-            ...this.state.controls
-        };
-        const updatedFormElement = {
-            ...updatedContolsForm[inputIdentifier]
-        };
-        updatedFormElement.value = event.target.value;
-        updatedFormElement.valid = this.checkValidity(updatedFormElement.value, updatedFormElement.validation);
-        updatedFormElement.touched = true;
-        updatedContolsForm[inputIdentifier] = updatedFormElement;
+        })
 
 
-        this.setState({ controls: updatedContolsForm });
+        this.setState({ controls: updatedControls });
     }
 
 
@@ -140,13 +113,13 @@ export class Auth extends Component {
         let errorMessage = null;
 
         if (this.props.error) {
-            errorMessage =    <p>{this.props.error.message}</p>
+            errorMessage = <p>{this.props.error.message}</p>
         }
 
         return (
-         
+
             <div className={classes.Auth}>
-                {this.props.isAuthenticated?<Redirect to={this.props.authRedirectPath}/>:null}
+                {this.props.isAuthenticated ? <Redirect to={this.props.authRedirectPath} /> : null}
                 {errorMessage}
                 <form onSubmit={this.submitHandler}>
                     {form}
@@ -164,7 +137,7 @@ const mapStateToProps = state => {
     return {
         loading: state.auth.loading,
         error: state.auth.error,
-        isAuthenticated:state.auth.token!=null,
+        isAuthenticated: state.auth.token != null,
         buildingBurger: state.burgerBuilder.building,
         authRedirectPath: state.auth.authRedirectPath
     }
